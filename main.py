@@ -1,20 +1,26 @@
 """Application entry point."""
 
-from agents.research_agent import ResearchAgent
+from graph.workflow import build_graph
+from models.state import ResearchState
 
 
 def main() -> None:
-    """Run the research agent."""
+    """Run the research workflow."""
+
     topic = input("Enter a research topic: ")
 
-    researcher = ResearchAgent()
+    state: ResearchState = {
+    "topic": topic,
+    "research_notes": "",
+    "report": "",
+    }
 
-    result = researcher.research(topic)
+    graph = build_graph()
+
+    result = graph.invoke(state)
 
     print("\n")
-    print("=" * 80)
-    print(result)
-    print("=" * 80)
+    print(result["report"])
 
 
 if __name__ == "__main__":
