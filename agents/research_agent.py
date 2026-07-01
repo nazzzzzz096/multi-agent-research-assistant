@@ -2,7 +2,9 @@
 
 from llm.gemini_client import GeminiClient
 from models.state import ResearchState
+from utils.logger import setup_logger
 
+logger = setup_logger(__name__)
 class ResearchAgent:
     """Agent responsible for researching a given topic."""
 
@@ -12,7 +14,7 @@ class ResearchAgent:
 
     def research(self, state: ResearchState) -> ResearchState:
         """Populate the research notes in the shared state."""
-
+        logger.info("Starting research on topic: %s", state["topic"])
         prompt = f"""
     You are an expert research assistant.
 
@@ -27,7 +29,7 @@ class ResearchAgent:
     4. Challenges
     5. References
     """
-
+        
         state["research_notes"] = self.llm.generate(prompt)
-
+        logger.info("Research completed.")
         return state
