@@ -1,7 +1,8 @@
-from tools.tavily_search import TavilySearchProvider
+from services.cache_manager import CacheManager
 
-search = TavilySearchProvider()
+cache = CacheManager()
 
-result = search.search("Latest AI trends")
+result = cache.get("LangGraph")
 
 print(result)
+print(result.status)
