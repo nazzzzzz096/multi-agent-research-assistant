@@ -1,18 +1,20 @@
 """Application entry point."""
 
-from llm.gemini_client import GeminiClient
+from agents.research_agent import ResearchAgent
 
 
 def main() -> None:
-    """Run a simple Gemini test."""
+    """Run the research agent."""
+    topic = input("Enter a research topic: ")
 
-    llm = GeminiClient()
+    researcher = ResearchAgent()
 
-    response = llm.generate(
-        "Explain what an AI agent is in three sentences."
-    )
+    result = researcher.research(topic)
 
-    print(response)
+    print("\n")
+    print("=" * 80)
+    print(result)
+    print("=" * 80)
 
 
 if __name__ == "__main__":
