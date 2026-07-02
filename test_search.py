@@ -2,7 +2,13 @@ from services.cache_manager import CacheManager
 
 cache = CacheManager()
 
-result = cache.get("LangGraph")
+cache.save(
+    topic="LLMs",
+    report="# Hello\n\nThis is a cached report."
+)
 
-print(result)
+result = cache.get("LLMs")
+
 print(result.status)
+print(result.report)
+print(result.metadata)

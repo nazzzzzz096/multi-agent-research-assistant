@@ -8,12 +8,14 @@ from models.state import ResearchState
 from agents.router_agent import RouterAgent
 from agents.general_agent import GeneralAgent
 from agents.safety_agent import SafetyAgent
-
+from models.enums import CacheStatus
+from agents.cache_agent import CacheAgent
 research_agent = ResearchAgent()
 writer_agent = WriterAgent()
 router = RouterAgent()
 general = GeneralAgent()
 safety = SafetyAgent()
+cache = CacheAgent()
 
 def research_node(state: ResearchState) -> ResearchState:
     """Execute the research agent."""
@@ -42,6 +44,17 @@ def route_query(state: ResearchState) -> str:
 
     return state["route"].value
 
+def route_cache(state: ResearchState) -> str:
+    print("CACHE STATUS:", state["cache_status"])
+
+    if state["cache_status"] == CacheStatus.HIT:
+        return "hit"
+
+    return "miss"
+def cache_node(state: ResearchState) -> ResearchState:
+    """Execute the cache agent."""
+    
+    return cache.lookup(state)
 def build_graph():
     """Build and compile the workflow graph."""
 
@@ -52,6 +65,7 @@ def build_graph():
     graph.add_node("writer", writer_node)
     graph.add_node("general", general_node)
     graph.add_node("unsafe", unsafe_node)
+    graph.add_node("cache", cache_node)
 
     graph.add_edge(START, "router")
 
@@ -59,12 +73,19 @@ def build_graph():
         "router",
         route_query,
         {
-            "research": "research",
+            "research": "cache",
             "general": "general",
             "unsafe": "unsafe",
         },
     )
-
+    graph.add_conditional_edges(
+    "cache",
+    route_cache,
+    {
+        "hit": END,
+        "miss": "research",
+    },
+    )
     graph.add_edge("research", "writer")
 
     graph.add_edge("writer", END)

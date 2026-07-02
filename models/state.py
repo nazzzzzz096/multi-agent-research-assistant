@@ -3,6 +3,7 @@
 
 from typing import Literal, TypedDict
 from models.enums import Route
+from models.enums import CacheStatus
 route: Literal["research", "general", "unsafe"]
 
 class ResearchState(TypedDict):
@@ -11,3 +12,4 @@ class ResearchState(TypedDict):
     research_notes: str
     report: str
     route: Route
+    cache_status: CacheStatus
